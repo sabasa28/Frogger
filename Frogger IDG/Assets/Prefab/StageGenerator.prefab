@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &8245924346275642295
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8379750890911345101}
+  - component: {fileID: 2209843330570726444}
+  m_Layer: 0
+  m_Name: StageGenerator
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8379750890911345101
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8245924346275642295}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 0
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2209843330570726444
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8245924346275642295}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa5fe6c652fe3234a8ac0b43f1b3813e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  lanesToSpawn: 0
+  posibleLanes:
+  - {fileID: 2830884124328880163, guid: 0acfb891cee5839479ada741ea5c202f, type: 3}
+  - {fileID: 3682739033076709960, guid: ed6a7748153590841831a76ff9edae40, type: 3}
+  - {fileID: 2472132556530822726, guid: 0746f4cc257d07c4384e9ea47b3ba9bf, type: 3}
+  - {fileID: 2484908753857777746, guid: 2f6367ebfd84ddb49809160db39eef0e, type: 3}
+  - {fileID: 8934421691212446583, guid: 808118e4881f4df4aaf7b4b583eff0d2, type: 3}
+  - {fileID: 4039224199024501118, guid: 2c93fd3b733bfff41b0cce2366b91179, type: 3}
+  - {fileID: 1057267899749314844, guid: 1e04878f5887fd44ca52c4db6e5a4b8d, type: 3}
+  - {fileID: 7315823438940488157, guid: a224b44fbbf0fd841b0b28d5a998c259, type: 3}

@@ -5,6 +5,7 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     public float jumpTime;
+    public float minTimeBetweenJumps;
     enum State
     { 
         jumping,
@@ -16,13 +17,15 @@ public class Player : MonoBehaviour
     public Sprite idleSprite;
     public Sprite jumpingSprite1;
     public Sprite jumpingSprite2;
+    Vector3 spawnPosition;
     Quaternion facingUp = Quaternion.Euler(new Vector3(0, 0, 0));
     Quaternion facingDown = Quaternion.Euler(new Vector3(0, 0, 180));
     Quaternion facingRight = Quaternion.Euler(new Vector3(0, 0, -90));
     Quaternion facingLeft = Quaternion.Euler(new Vector3(0, 0, 90));
-
+    Coroutine JumpCoroutine;
     void Start()
     {
+        spawnPosition = transform.position;
         sr = GetComponent<SpriteRenderer>();
     }
     void Update()
@@ -32,7 +35,7 @@ public class Player : MonoBehaviour
         Vector2 direction = Vector2.zero;
         if (movementH != 0) direction.x = movementH;
         else direction.y = movementV;
-        if (frogState == State.idle && direction != Vector2.zero) StartCoroutine(Jump(direction));
+        if (frogState == State.idle && direction != Vector2.zero) JumpCoroutine = StartCoroutine(Jump(direction));
     }
     IEnumerator Jump(Vector3 direction)
     {
@@ -56,6 +59,7 @@ public class Player : MonoBehaviour
             yield return null;
         }
         sr.sprite = idleSprite;
+        yield return new WaitForSeconds(minTimeBetweenJumps);
         frogState = State.idle;
     }
 
@@ -73,5 +77,19 @@ public class Player : MonoBehaviour
         float minForMidJump = 0.3f;
         float maxForMidJump = 0.7f;
         return (t > minForMidJump && t < maxForMidJump);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("Car"))
+        {
+            if (frogState == State.jumping)
+            {
+                StopCoroutine(JumpCoroutine);
+                sr.sprite = idleSprite;
+                frogState = State.idle;
+            }
+            transform.position = spawnPosition;
+        }
     }
 }

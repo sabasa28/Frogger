@@ -5,6 +5,7 @@ using UnityEngine;
 public class Camera : MonoBehaviour
 {
     Transform player;
+    public float offset;
     void Start()
     {
         player = FindObjectOfType<Player>().transform;
@@ -12,7 +13,7 @@ public class Camera : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.y != player.position.y)
-            transform.position = new Vector3(transform.position.x, player.position.y, transform.position.z);
+        if (transform.position.y+ offset != player.position.y)
+            transform.position = new Vector3(transform.position.x, player.position.y + offset, transform.position.z);
     }
 }
