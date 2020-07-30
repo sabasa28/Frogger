@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Car : MonoBehaviour
+public class ScrollingObj : MonoBehaviour
 {
     public enum Direction
     {
@@ -18,6 +18,6 @@ public class Car : MonoBehaviour
 
     void Update()
     {
-        transform.position -= transform.right * Time.deltaTime * speed;
+        transform.position += -transform.right * Time.deltaTime * speed;
     }
 }

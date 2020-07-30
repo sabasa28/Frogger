@@ -44,6 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lanesToSpawn: 0
+  chanceToNotSpawnLane: 0
   posibleLanes:
   - {fileID: 2830884124328880163, guid: 0acfb891cee5839479ada741ea5c202f, type: 3}
   - {fileID: 3682739033076709960, guid: ed6a7748153590841831a76ff9edae40, type: 3}
@@ -53,3 +54,9 @@ MonoBehaviour:
   - {fileID: 4039224199024501118, guid: 2c93fd3b733bfff41b0cce2366b91179, type: 3}
   - {fileID: 1057267899749314844, guid: 1e04878f5887fd44ca52c4db6e5a4b8d, type: 3}
   - {fileID: 7315823438940488157, guid: a224b44fbbf0fd841b0b28d5a998c259, type: 3}
+  - {fileID: 3518607670884950569, guid: 68939e739faa00644b77023f8d53a703, type: 3}
+  - {fileID: 7926750983896029284, guid: 1aefe84781a5b9643ab5ad108e1c77dc, type: 3}
+  - {fileID: 728844414366997504, guid: a1436aca26cc2e64096390e4eb8b2dc5, type: 3}
+  - {fileID: 1679569534482350744, guid: 7cde80756bc8b5d48b5ab15b80050ab9, type: 3}
+  - {fileID: 6693283977398600138, guid: c503ebf3b5d82994dae5d113c5abf4e8, type: 3}
+  - {fileID: 3128162987567496145, guid: dd7b2a4a4aa61e0408bf6d4f196b099e, type: 3}

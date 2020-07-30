@@ -7,10 +7,10 @@ public class LevelLimit : MonoBehaviour
     public float XToTransferTo; 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Car"))
+        if (collision.CompareTag("Car")|| collision.CompareTag("Log"))
         {
-            Car car = collision.GetComponent<Car>();
-            car.transform.position = new Vector3(XToTransferTo, car.transform.position.y, car.transform.position.z);
+            Transform colTrans = collision.GetComponent<Transform>();
+            colTrans.transform.position = new Vector3(XToTransferTo, colTrans.transform.position.y, colTrans.transform.position.z);
         }
     }
 }
