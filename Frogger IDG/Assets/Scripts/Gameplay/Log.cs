@@ -13,7 +13,7 @@ public class Log : ScrollingObj
     {
         if (collision.CompareTag("Player"))
         {
-            Vector3 translationVec = -transform.right * Time.deltaTime * speed; 
+            Vector3 translationVec = -transform.right /** Time.deltaTime*/ * speed; 
             player.momentum = translationVec;
         }
     }

@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
@@ -20,6 +21,9 @@ public class Player : MonoBehaviour
     public Sprite jumpingSprite1;
     public Sprite jumpingSprite2;
     public Vector3 momentum;
+    public Action SwitchPauseState;
+    public Action<int> UpdateHUD;
+    public int lives;
     Vector3 spawnPosition;
     bool onWater = false;
     bool onFloatingPlatform = false;
@@ -47,6 +51,10 @@ public class Player : MonoBehaviour
         if (movementH != 0) direction.x = movementH;
         else direction.y = movementV;
         if (frogState == State.idle && direction != Vector2.zero) JumpCoroutine = StartCoroutine(Jump(direction));
+        if (Input.GetKeyDown(KeyCode.Escape)|| Input.GetKeyDown(KeyCode.P))
+        {
+            SwitchPauseState();
+        }
     }
     private void FixedUpdate()
     {
@@ -54,7 +62,7 @@ public class Player : MonoBehaviour
         onFloatingPlatform = false; //lo seteo false y por orden de lectura luego se comprueba si es true en el ontriggerstay
         if (frogState != State.midjump)
         {
-            transform.position += momentum;
+            transform.position += momentum * Time.deltaTime;
         }
     }
     IEnumerator Jump(Vector3 direction)
@@ -69,7 +77,6 @@ public class Player : MonoBehaviour
 
         jumpTargetPosition = transform.position + direction;
         jumpOrigPos = transform.position;
-        //momentum = Vector3.zero;
         Vector3 momentumAtTakeOff = momentum;
         float t = 0;
         while (transform.position != jumpTargetPosition)
@@ -78,8 +85,8 @@ public class Player : MonoBehaviour
             t += Time.deltaTime / jumpTime;
             if (momentum != Vector3.zero)
             {
-                jumpOrigPos += momentumAtTakeOff;
-                jumpTargetPosition += momentumAtTakeOff;
+                jumpOrigPos += momentumAtTakeOff * Time.deltaTime;
+                jumpTargetPosition += momentumAtTakeOff * Time.deltaTime;
             }
             transform.position = Vector3.Lerp(jumpOrigPos, jumpTargetPosition,t);
             yield return null;
@@ -117,7 +124,7 @@ public class Player : MonoBehaviour
     {
         if (collision.CompareTag("Car"))
         {
-            ReturnToSpawnPoint();
+            Die();
         }
     }
 
@@ -132,9 +139,14 @@ public class Player : MonoBehaviour
             onFloatingPlatform = true;
         }
     }
+    void OnSinking()
+    {
+        if (onWater && !onFloatingPlatform) Die();
+    }
 
     void ReturnToSpawnPoint()
     {
+
         if (frogState == State.midjump)
         {
             StopCoroutine(JumpCoroutine);
@@ -145,8 +157,10 @@ public class Player : MonoBehaviour
         transform.position = spawnPosition;
     }
 
-    void OnSinking()
+    void Die()
     {
-        if (onWater && !onFloatingPlatform) ReturnToSpawnPoint();
+        lives -= 1;
+        UpdateHUD(lives);
+        ReturnToSpawnPoint();
     }
 }
