@@ -7,12 +7,17 @@ public class GameplayController : MonoBehaviour
 {
     bool pause = false;
     Player player;
+    StageGenerator stageGenerator;
     public Action HidePauseMenu;
     public Action ShowPauseMenu;
     public Action<int> UpdateHUD;
     float timeInLvlF = 0;
     int timeInLvlI = 0;
 
+    private void Awake()
+    {
+        FindObjectOfType<StageGenerator>().PassStageCosntrains = PassStageConstrains;
+    }
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -51,6 +56,16 @@ public class GameplayController : MonoBehaviour
         {
             timeInLvlI = (int)timeInLvlF;
             UpdateHUD(timeInLvlI);
+        }
+    }
+
+    void PassStageConstrains()
+    {
+        ScrollingObj[] ConstrainedObjs = FindObjectsOfType<ScrollingObj>();
+        for (int i = 0; i < ConstrainedObjs.Length; i++)
+        {
+            ConstrainedObjs[i].minX = -15;
+            ConstrainedObjs[i].maxX = 25;
         }
     }
 }
