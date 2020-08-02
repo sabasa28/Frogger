@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class UIMainMenu : MonoBehaviour
 {
     public GameObject credits;
+    public GameObject controls;
     public void LoadGameplay()
     {
         SceneManager.LoadScene(2);
@@ -22,5 +23,13 @@ public class UIMainMenu : MonoBehaviour
     public void HideCredits()
     { 
         credits.SetActive(false);
+    }
+    public void ShowControls()
+    {
+        controls.SetActive(true);
+    }
+    public void HideControls()
+    {
+        controls.SetActive(false);
     }
 }
