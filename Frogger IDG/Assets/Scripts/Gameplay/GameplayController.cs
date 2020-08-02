@@ -2,14 +2,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameplayController : MonoBehaviour
 {
     bool pause = false;
     Player player;
     StageGenerator stageGenerator;
-    public Action HidePauseMenu;
     public Action ShowPauseMenu;
+    public Action ShowNextLvlMenu;
+    public Action ShowDeathPanel;
+    public Action HideDeathPanel;
     public Action<int> UpdateHUD;
     float minXForScrollingObjs = -15;
     float maxXForScrollingObjs = 25;
@@ -29,20 +32,17 @@ public class GameplayController : MonoBehaviour
     void Start()
     {
         stageGenerator.PassStageCosntrains = PassStageConstrains;
+        stageGenerator.EndLevel = OnLevelEnded;
         PassPlayerConstrains();
-        player.SwitchPauseState = SwitchPauseState;
+        player.PauseGame = OnPause;
+        player.OnDeath = OnPlayersDeath;
+        player.OnRespawn = OnPlayersRespawn;
         player.ableToMove = false;
     }
 
     private void Update()
     {
         UpdateTimer();
-    }
-
-    void SwitchPauseState()
-    {
-        if (pause) OnUnpause();
-        else OnPause();
     }
 
     void OnPause()
@@ -57,7 +57,6 @@ public class GameplayController : MonoBehaviour
     {
         Time.timeScale = 1.0f;
         pause = false;
-        HidePauseMenu();
         player.ableToMove = true;
     }
 
@@ -90,9 +89,49 @@ public class GameplayController : MonoBehaviour
 
     public void StartLevel(int mode)
     {
-        stageGenerator.GenerateLevel(mode);
+        stageGenerator.SetMode(mode);
+        stageGenerator.GenerateLevel();
         player.ableToMove = true;
         Time.timeScale = 1;
     }
 
+    public void OnLevelEnded()
+    {
+        Time.timeScale = 0;
+        ShowNextLvlMenu();
+    }
+    public void ChangeLevel()
+    {
+        if (stageGenerator.AreLevelsLeft())
+        {
+            Time.timeScale = 1;
+            stageGenerator.GenerateLevel();
+        }
+        else
+        {
+            GameData.Get().score = player.GetFullScore();
+            GameData.Get().time = timeInLvlI;
+            SceneManager.LoadScene(3);
+        }
+    }
+
+    void OnPlayersDeath(int lives)
+    {
+        player.ableToMove = false;
+        Time.timeScale = 0;
+        if (lives > 0) ShowDeathPanel();
+        else
+        {
+            GameData.Get().score = player.GetFullScore();
+            GameData.Get().time = timeInLvlI;
+            SceneManager.LoadScene(4);
+        }
+    }
+
+    void OnPlayersRespawn()
+    {
+        player.ableToMove = true;
+        Time.timeScale = 1;
+        HideDeathPanel();
+    }
 }

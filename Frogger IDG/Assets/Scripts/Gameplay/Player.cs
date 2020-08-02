@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Experimental.PlayerLoop;
+using UnityEngine.SocialPlatforms.Impl;
 
 public class Player : MonoBehaviour
 {
@@ -20,15 +21,21 @@ public class Player : MonoBehaviour
     public Sprite idleSprite;
     public Sprite jumpingSprite1;
     public Sprite jumpingSprite2;
+    public Sprite deathSprite;
     public Vector3 momentum;
-    public Action SwitchPauseState;
-    public Action<int> UpdateHUD;
+    public Action PauseGame;
+    public Action<int> UpdateHUDLives;
+    public Action<int> UpdateHUDScore;
+    public Action <int> OnDeath;
+    public Action OnRespawn;
     public int lives;
     public bool ableToMove;
     Vector3 spawnPosition;
     bool onWater = false;
     bool onFloatingPlatform = false;
     bool fellOnWater = false;
+    public int scoreInScreen = 0;
+    public int scoreInPrevScreens = 0;
     [HideInInspector]
     public Vector3 jumpOrigPos;
     [HideInInspector]
@@ -60,7 +67,7 @@ public class Player : MonoBehaviour
         if (frogState == State.idle && direction != Vector2.zero && ableToMove) JumpCoroutine = StartCoroutine(Jump(direction));
         if (Input.GetKeyDown(KeyCode.Escape)|| Input.GetKeyDown(KeyCode.P))
         {
-            SwitchPauseState();
+            PauseGame();
         }
     }
     private void FixedUpdate()
@@ -108,6 +115,7 @@ public class Player : MonoBehaviour
         }
         sr.sprite = idleSprite;
         StartCoroutine(ResetMomentum());
+        IncreaseScore();
         frogState = State.landing;
         yield return new WaitForSeconds(minTimeBetweenJumps);
         frogState = State.idle;
@@ -140,6 +148,12 @@ public class Player : MonoBehaviour
         {
             Die();
         }
+        if (collision.CompareTag("Finish"))
+        {
+            ReturnToSpawnPoint();
+            scoreInPrevScreens += scoreInScreen;
+            scoreInScreen = 0;
+        }
     }
 
     private void OnTriggerStay2D(Collider2D collision)
@@ -161,12 +175,9 @@ public class Player : MonoBehaviour
 
     void ReturnToSpawnPoint()
     {
-        if (frogState == State.midjump)
-        {
-            StopCoroutine(JumpCoroutine);
-            sr.sprite = idleSprite;
-            frogState = State.idle;
-        }
+        StopCoroutine(JumpCoroutine);
+        sr.sprite = idleSprite;
+        frogState = State.idle;
         StartCoroutine(ResetMomentum());
         transform.rotation = Quaternion.identity;
         transform.position = spawnPosition;
@@ -174,13 +185,44 @@ public class Player : MonoBehaviour
 
     void Die()
     {
+        StopCoroutine(JumpCoroutine);
         lives -= 1;
-        UpdateHUD(lives);
+        UpdateHUDLives(lives);
+        sr.sprite = deathSprite;
+        OnDeath(lives);
+        StartCoroutine(CheckInputForRespawn());
+    }
+
+    IEnumerator CheckInputForRespawn()
+    {
+        while (!Input.GetKeyDown(KeyCode.Space))
+        {
+            yield return null;
+        }
+        Respawn();
+    }
+    void Respawn()
+    { 
         ReturnToSpawnPoint();
+        OnRespawn();
     }
 
     bool OutOfXLimits()
     {
         return (transform.position.x < minX || transform.position.x > maxX);
+    }
+
+    void IncreaseScore()
+    {
+        if ((int)(transform.position.y - spawnPosition.y) > scoreInScreen)
+        {
+            scoreInScreen = (int)(transform.position.y - spawnPosition.y);
+            UpdateHUDScore(GetFullScore());
+        }
+    }
+
+    public int GetFullScore()
+    {
+        return (scoreInPrevScreens + scoreInScreen);
     }
 }

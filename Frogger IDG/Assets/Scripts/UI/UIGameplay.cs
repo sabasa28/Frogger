@@ -9,9 +9,12 @@ using UnityEngine.SceneManagement;
 public class UIGameplay : MonoBehaviour
 {
     public GameObject pauseMenu;
+    public GameObject nextLvlMenu;
+    public GameObject deathPanel;
     public GameObject[] hearts;
     public GameObject modeSelectionMenu;
     public TextMeshProUGUI timer;
+    public TextMeshProUGUI score;
     Player player;
     GameplayController gpController;
     
@@ -20,9 +23,12 @@ public class UIGameplay : MonoBehaviour
         player = FindObjectOfType<Player>();
         gpController = FindObjectOfType<GameplayController>();
         gpController.ShowPauseMenu = ShowPauseMenu;
-        gpController.HidePauseMenu = HidePauseMenu;
+        gpController.ShowNextLvlMenu = ShowNextLvlMenu;
+        gpController.ShowDeathPanel = ShowDeathPanel;
+        gpController.HideDeathPanel = HideDeathPanel;
         gpController.UpdateHUD = UpdateTimer;
-        player.UpdateHUD = UpdateHearts;
+        player.UpdateHUDLives = UpdateHearts;
+        player.UpdateHUDScore = UpdateScore;
     }
 
     void ShowPauseMenu()
@@ -30,14 +36,10 @@ public class UIGameplay : MonoBehaviour
         pauseMenu.SetActive(true);
     }
 
-    void HidePauseMenu()
-    {
-        pauseMenu.SetActive(false);
-    }
-
     public void UnpauseGame()
     {
         gpController.OnUnpause();
+        pauseMenu.SetActive(false);
     }
 
     public void ReturnToMainMenu()
@@ -64,6 +66,11 @@ public class UIGameplay : MonoBehaviour
         }
     }
 
+    void UpdateScore(int newScore)
+    {
+        score.text = "Score " + newScore;
+    }
+
     public void StartRegularMode()
     {
         gpController.StartLevel(0);
@@ -75,4 +82,26 @@ public class UIGameplay : MonoBehaviour
         gpController.StartLevel(1);
         modeSelectionMenu.SetActive(false);
     }
+
+    void ShowNextLvlMenu()
+    {
+        nextLvlMenu.SetActive(true);
+    }
+
+    public void LoadNextLevel()
+    {
+        gpController.ChangeLevel();
+        nextLvlMenu.SetActive(false);
+    }
+
+    void ShowDeathPanel()
+    {
+        deathPanel.SetActive(true);
+    }
+
+    void HideDeathPanel()
+    {
+        deathPanel.SetActive(false);
+    }
+
 }

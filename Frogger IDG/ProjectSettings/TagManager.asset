@@ -9,6 +9,7 @@ TagManager:
   - Water
   - FloatingPlatform
   - Log
+  - MapTile
   layers:
   - Default
   - TransparentFX

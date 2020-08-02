@@ -7,6 +7,10 @@ public class DivingObj : MonoBehaviour
     public Sprite Floating;
     public Sprite Diving;
     public Sprite UnderWater;
+    int minTimeToDive = 3;
+    int maxTimeToDive = 6;
+    int timeDiving = 1;
+    int timeUnderWater = 2;
     bool playerOnTop = false;
     SpriteRenderer sr;
     BoxCollider2D coll;
@@ -22,16 +26,16 @@ public class DivingObj : MonoBehaviour
         {
             do
             {
-                int rand = Random.Range(3, 6);
+                int rand = Random.Range(minTimeToDive, maxTimeToDive);
                 yield return new WaitForSeconds(rand);
             } while (playerOnTop);
             sr.sprite = Diving;
-            yield return new WaitForSeconds(1);
+            yield return new WaitForSeconds(timeDiving);
             if (!playerOnTop)
             { 
                 coll.enabled = false;
                 sr.sprite = UnderWater;
-                yield return new WaitForSeconds(3);
+                yield return new WaitForSeconds(timeUnderWater);
                 coll.enabled = true;
             }
             sr.sprite = Floating;

@@ -60,3 +60,5 @@ MonoBehaviour:
   - {fileID: 1679569534482350744, guid: 7cde80756bc8b5d48b5ab15b80050ab9, type: 3}
   - {fileID: 6693283977398600138, guid: c503ebf3b5d82994dae5d113c5abf4e8, type: 3}
   - {fileID: 3128162987567496145, guid: dd7b2a4a4aa61e0408bf6d4f196b099e, type: 3}
+  finishLine: {fileID: 991878429767211580, guid: a3df8866a92b29d4bbb24b199f0114c0,
+    type: 3}
