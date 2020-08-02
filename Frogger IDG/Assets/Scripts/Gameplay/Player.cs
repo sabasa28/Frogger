@@ -24,6 +24,7 @@ public class Player : MonoBehaviour
     public Action SwitchPauseState;
     public Action<int> UpdateHUD;
     public int lives;
+    public bool ableToMove;
     Vector3 spawnPosition;
     bool onWater = false;
     bool onFloatingPlatform = false;
@@ -56,7 +57,7 @@ public class Player : MonoBehaviour
         Vector2 direction = Vector2.zero;
         if (movementH != 0) direction.x = movementH;
         else direction.y = movementV;
-        if (frogState == State.idle && direction != Vector2.zero) JumpCoroutine = StartCoroutine(Jump(direction));
+        if (frogState == State.idle && direction != Vector2.zero && ableToMove) JumpCoroutine = StartCoroutine(Jump(direction));
         if (Input.GetKeyDown(KeyCode.Escape)|| Input.GetKeyDown(KeyCode.P))
         {
             SwitchPauseState();

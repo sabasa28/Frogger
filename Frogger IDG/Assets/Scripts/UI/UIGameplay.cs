@@ -10,9 +10,11 @@ public class UIGameplay : MonoBehaviour
 {
     public GameObject pauseMenu;
     public GameObject[] hearts;
+    public GameObject modeSelectionMenu;
     public TextMeshProUGUI timer;
     Player player;
     GameplayController gpController;
+    
     void Start()
     {
         player = FindObjectOfType<Player>();
@@ -60,5 +62,17 @@ public class UIGameplay : MonoBehaviour
                 hearts[i].SetActive(false);
             }
         }
+    }
+
+    public void StartRegularMode()
+    {
+        gpController.StartLevel(0);
+        modeSelectionMenu.SetActive(false);
+    }
+
+    public void StartEndlessMode()
+    {
+        gpController.StartLevel(1);
+        modeSelectionMenu.SetActive(false);
     }
 }

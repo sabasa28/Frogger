@@ -21,13 +21,17 @@ public class GameplayController : MonoBehaviour
 
     private void Awake()
     {
-        FindObjectOfType<StageGenerator>().PassStageCosntrains = PassStageConstrains;
+        Time.timeScale = 0;
+        stageGenerator = FindObjectOfType<StageGenerator>();
         player = FindObjectOfType<Player>();
     }
+
     void Start()
     {
+        stageGenerator.PassStageCosntrains = PassStageConstrains;
         PassPlayerConstrains();
         player.SwitchPauseState = SwitchPauseState;
+        player.ableToMove = false;
     }
 
     private void Update()
@@ -46,6 +50,7 @@ public class GameplayController : MonoBehaviour
         Time.timeScale = 0.0f;
         pause = true;
         ShowPauseMenu();
+        player.ableToMove = false;
     }
 
     public void OnUnpause()
@@ -53,6 +58,7 @@ public class GameplayController : MonoBehaviour
         Time.timeScale = 1.0f;
         pause = false;
         HidePauseMenu();
+        player.ableToMove = true;
     }
 
     void UpdateTimer()
@@ -80,6 +86,13 @@ public class GameplayController : MonoBehaviour
         player.minX = minXForPlayer;
         player.maxX = maxXForPlayer;
         player.minY = minYForPlayer;
+    }
+
+    public void StartLevel(int mode)
+    {
+        stageGenerator.GenerateLevel(mode);
+        player.ableToMove = true;
+        Time.timeScale = 1;
     }
 
 }
