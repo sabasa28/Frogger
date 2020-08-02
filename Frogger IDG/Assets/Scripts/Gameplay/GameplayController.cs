@@ -109,8 +109,7 @@ public class GameplayController : MonoBehaviour
         }
         else
         {
-            GameData.Get().score = player.GetFullScore();
-            GameData.Get().time = timeInLvlI;
+            GameData.Get().SetData(player.GetFullScore(), timeInLvlI, stageGenerator.GetMode(), true);
             SceneManager.LoadScene(3);
         }
     }
@@ -122,9 +121,8 @@ public class GameplayController : MonoBehaviour
         if (lives > 0) ShowDeathPanel();
         else
         {
-            GameData.Get().score = player.GetFullScore();
-            GameData.Get().time = timeInLvlI;
-            SceneManager.LoadScene(4);
+            GameData.Get().SetData(player.GetFullScore(), timeInLvlI, stageGenerator.GetMode(), false);
+            SceneManager.LoadScene(3);
         }
     }
 

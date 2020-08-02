@@ -34,6 +34,12 @@ public class StageGenerator : MonoBehaviour
         }
     }
 
+    public int GetMode()
+    {
+        if (mode == Mode.regular) return 0;
+        else return 1;
+    }
+
     public void GenerateLevel()
     {
         if (mode == Mode.regular)
