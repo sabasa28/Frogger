@@ -6,8 +6,9 @@ TagManager:
   tags:
   - Car
   - Car Limit
-  - Log
   - Water
+  - FloatingPlatform
+  - Log
   layers:
   - Default
   - TransparentFX

@@ -32,6 +32,12 @@ public class Player : MonoBehaviour
     public Vector3 jumpOrigPos;
     [HideInInspector]
     public Vector3 jumpTargetPosition;
+    [HideInInspector]
+    public float minX;
+    [HideInInspector]
+    public float maxX;
+    [HideInInspector]
+    public float minY;
     Quaternion facingUp = Quaternion.Euler(new Vector3(0, 0, 0));
     Quaternion facingDown = Quaternion.Euler(new Vector3(0, 0, 180));
     Quaternion facingRight = Quaternion.Euler(new Vector3(0, 0, -90));
@@ -67,8 +73,6 @@ public class Player : MonoBehaviour
     }
     IEnumerator Jump(Vector3 direction)
     {
-        sr.sprite = jumpingSprite1;
-        frogState = State.midjump;
 
         if (direction == Vector3.up) transform.rotation = facingUp;
         else if (direction == Vector3.right) transform.rotation = facingRight;
@@ -77,6 +81,14 @@ public class Player : MonoBehaviour
 
         jumpTargetPosition = transform.position + direction;
         jumpOrigPos = transform.position;
+
+        if (jumpTargetPosition.x < minX || jumpTargetPosition.x > maxX || jumpTargetPosition.y < minY)
+        {
+            yield break;
+        }
+        sr.sprite = jumpingSprite1;
+        frogState = State.midjump;
+
         Vector3 momentumAtTakeOff = momentum;
         float t = 0;
         while (transform.position != jumpTargetPosition)
@@ -88,6 +100,8 @@ public class Player : MonoBehaviour
                 jumpOrigPos += momentumAtTakeOff * Time.deltaTime;
                 jumpTargetPosition += momentumAtTakeOff * Time.deltaTime;
             }
+            if (jumpTargetPosition.x < minX) jumpTargetPosition = new Vector3(minX, jumpTargetPosition.y, jumpTargetPosition.z);
+            if (jumpTargetPosition.x > maxX) jumpTargetPosition = new Vector3(maxX, jumpTargetPosition.y, jumpTargetPosition.z);
             transform.position = Vector3.Lerp(jumpOrigPos, jumpTargetPosition,t);
             yield return null;
         }
@@ -98,7 +112,6 @@ public class Player : MonoBehaviour
         frogState = State.idle;
         OnSinking();
     }
-
     IEnumerator ResetMomentum()
     {
         yield return new WaitForFixedUpdate();
@@ -134,8 +147,9 @@ public class Player : MonoBehaviour
         {
             onWater = true;
         }
-        if (collision.CompareTag("Log"))
+        if (collision.CompareTag("FloatingPlatform"))
         {
+            if (OutOfXLimits()) Die();
             onFloatingPlatform = true;
         }
     }
@@ -146,14 +160,14 @@ public class Player : MonoBehaviour
 
     void ReturnToSpawnPoint()
     {
-
         if (frogState == State.midjump)
         {
             StopCoroutine(JumpCoroutine);
-            StartCoroutine(ResetMomentum());
             sr.sprite = idleSprite;
             frogState = State.idle;
         }
+        StartCoroutine(ResetMomentum());
+        transform.rotation = Quaternion.identity;
         transform.position = spawnPosition;
     }
 
@@ -162,5 +176,10 @@ public class Player : MonoBehaviour
         lives -= 1;
         UpdateHUD(lives);
         ReturnToSpawnPoint();
+    }
+
+    bool OutOfXLimits()
+    {
+        return (transform.position.x < minX || transform.position.x > maxX);
     }
 }

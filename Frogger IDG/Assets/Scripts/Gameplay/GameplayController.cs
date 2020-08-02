@@ -11,16 +11,22 @@ public class GameplayController : MonoBehaviour
     public Action HidePauseMenu;
     public Action ShowPauseMenu;
     public Action<int> UpdateHUD;
+    float minXForScrollingObjs = -15;
+    float maxXForScrollingObjs = 25;
+    float minXForPlayer = -2.5f;
+    float maxXForPlayer = 11.5f;
+    float minYForPlayer = -2.0f;
     float timeInLvlF = 0;
     int timeInLvlI = 0;
 
     private void Awake()
     {
         FindObjectOfType<StageGenerator>().PassStageCosntrains = PassStageConstrains;
+        player = FindObjectOfType<Player>();
     }
     void Start()
     {
-        player = FindObjectOfType<Player>();
+        PassPlayerConstrains();
         player.SwitchPauseState = SwitchPauseState;
     }
 
@@ -64,8 +70,16 @@ public class GameplayController : MonoBehaviour
         ScrollingObj[] ConstrainedObjs = FindObjectsOfType<ScrollingObj>();
         for (int i = 0; i < ConstrainedObjs.Length; i++)
         {
-            ConstrainedObjs[i].minX = -15;
-            ConstrainedObjs[i].maxX = 25;
+            ConstrainedObjs[i].minX = minXForScrollingObjs;
+            ConstrainedObjs[i].maxX = maxXForScrollingObjs;
         }
     }
+
+    void PassPlayerConstrains()
+    {
+        player.minX = minXForPlayer;
+        player.maxX = maxXForPlayer;
+        player.minY = minYForPlayer;
+    }
+
 }
